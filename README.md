@@ -19,14 +19,49 @@ This project is a tutorial on plain C programming. It gives an example and basic
 ### System Architecture:
 | INPUTS               | MEMORY      | file.bin    | OUTPUTS              |
 |----------------------|-------------|-------------|----------------------|
-| Discrete (btn)       |            CPU            | Discrete state       |
-| Analog (sensor)      |---------------------------| PWM output           |
-|                      |         Computer          |                      |
-| RTC                  |         plain C           | INTERFACE            |
-|----------------------|           gcc             |----------------------|
-| computer             |                           | Serial (socket)      |
-|                      |                           |                      |
+| Discrete (btn)       |            CPU           || Discrete state       |
+| Analog (sensor)      |:------------------------:|| PWM output           |
+|                      |         Computer         ||                      |
+| RTC                  |         plain C          || INTERFACE            |
+|----------------------|           gcc            ||----------------------|
+| computer             |                          || Serial (socket)      |
+|                      |                          ||                      |
 
+<table>
+    <tbody>
+        <tr>
+            <th>INPUTS </th>
+            <th>MEMORY</th>
+            <th>file.bin</th>
+            <th>OUTPUTS</th>
+        </tr>
+        <tr>
+            <td rowspan=3> 
+                Discrete (btn)<br>     
+                Analog (sensor)  
+            </td>
+            <td  colspan=2>CPU</td>
+            <td rowspan=3>
+                Discrete state <br>
+                PWM output 
+            </td>
+        </tr>
+        <tr>
+            <td>RTC</td>
+            <td rowspan=4>
+                Computer <br>
+                plain C  <br>
+                gcc 
+            </td>
+            <td>INTERFACE</td>
+        </tr>
+        <tr>
+            <td rowspan=2>computer </td>
+            <td></td>
+            <td  rowspan=2>Serial (socket)</td>
+        </tr>
+    </tbody>
+</table>
 ---
 
 <!-- GETTING STARTED -->
