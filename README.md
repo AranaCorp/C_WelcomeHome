@@ -17,22 +17,12 @@ This project is a tutorial on plain C programming. It gives an example and basic
 - **RTC management** Emulated real time (timestamp, alarms)
 
 ### System Architecture:
-| INPUTS               | MEMORY      | file.bin    | OUTPUTS              |
-|----------------------|-------------|-------------|----------------------|
-| Discrete (btn)       |            CPU           || Discrete state       |
-| Analog (sensor)      |:------------------------:|| PWM output           |
-|                      |         Computer         ||                      |
-| RTC                  |         plain C          || INTERFACE            |
-|----------------------|           gcc            ||----------------------|
-| computer             |                          || Serial (socket)      |
-|                      |                          ||                      |
-
 <table>
     <tbody>
         <tr>
             <th>INPUTS </th>
             <th>MEMORY</th>
-            <th>file.bin</th>
+            <td>file.bin</td>
             <th>OUTPUTS</th>
         </tr>
         <tr>
@@ -40,28 +30,32 @@ This project is a tutorial on plain C programming. It gives an example and basic
                 Discrete (btn)<br>     
                 Analog (sensor)  
             </td>
-            <td  colspan=2>CPU</td>
+            <th colspan=2 rowspan=2>CPU</th>
             <td rowspan=3>
                 Discrete state <br>
                 PWM output 
             </td>
-        </tr>
         <tr>
-            <td>RTC</td>
-            <td rowspan=4>
+        <tr>
+            <td colspan=2 rowspan=4>
                 Computer <br>
                 plain C  <br>
                 gcc 
             </td>
-            <td>INTERFACE</td>
+        </tr>
+        <tr>
+            <th>RTC</th>
+            <th>INTERFACES</th>
         </tr>
         <tr>
             <td rowspan=2>computer </td>
-            <td></td>
             <td  rowspan=2>Serial (socket)</td>
+        </tr>
+        <tr>
         </tr>
     </tbody>
 </table>
+
 ---
 
 <!-- GETTING STARTED -->
