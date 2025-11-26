@@ -9,13 +9,13 @@
 #define EEPROM_SIZE 256
 #define EEPROM_FILE "eeprom.bin"
 
-void load_eeprom();
-void save_eeprom();
+void eeprom_load();
+void eeprom_save();
 
-void WRITE_EEPROM(uint8_t addr, int8_t value);
-int8_t READ_EEPROM(uint8_t addr);
+void eeprom_write(uint8_t addr, int8_t value);
+int8_t eeprom_read(uint8_t addr);
 
-void WRITE_EEPROM_INT16(uint8_t addr, int16_t value);
-int16_t READ_EEPROM_INT16(uint8_t addr);
+void eeprom_write_int16(uint8_t addr, int16_t value);
+int16_t eeprom_read_int16(uint8_t addr);
 
 #endif

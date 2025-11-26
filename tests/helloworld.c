@@ -3,8 +3,8 @@
  * @brief Simple Hello World program in C
  * 
  * @compilation:
- *      Win32: gcc helloworld.c -o helloworld.exe ; ./helloworld.exe
- *      Linux: gcc helloworld.c -o helloworld ; ./helloworld
+ *      Win32: gcc ./tests/helloworld.c -o helloworld.exe ; ./helloworld.exe
+ *      Linux: gcc ./tests/helloworld.c -o helloworld ; ./helloworld
  */
 #include <stdio.h>
 

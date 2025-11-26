@@ -14,12 +14,12 @@ typedef struct {
 	time_t delta;
 } RTC;
 
-void RTC_Init(RTC *rtc);
-void RTC_fromStamp(RTC *rtc);
-void RTC_SyncWithSystem(RTC *rtc);
-void RTC_GetDateTime(RTC *rtc);
-void RTC_SaveToEEPROM(RTC *rtc, uint8_t addr);
-void RTC_LoadFromEEPROM(RTC *rtc, uint8_t addr);
+void rtc_init(RTC *rtc);
+void rtc_get_timestring(RTC *rtc);
+void rtc_sync_time(RTC *rtc);
+void rtc_update_time(RTC *rtc);
+void rtc_save_to_eeprom(RTC *rtc, uint8_t addr);
+void rtc_load_from_eeprom(RTC *rtc, uint8_t addr);
 
 #ifndef EEPROM_H
 static inline int16_t READ_EEPROM_INT16(uint8_t addr) { return 0; }  

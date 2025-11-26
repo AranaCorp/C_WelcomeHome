@@ -6,7 +6,7 @@
 <!-- OVERVIEW -->
 ## Overview
 ### Descritpion
-This project is a tutorial on plain C programming. It gives an example and basic knowledge on key features of the language, interfaces and common librairies
+This project is a tutorial on plain C programming. It gives an example and basic knowledge on key features of the language, interfaces and common librairies. It is the next step following the helloworld tutorial to grasp the essentials of C programming.
 
 ### Main features:
 - **Discrete State/Output** Emulate a simple state or output (On/Off)
@@ -63,8 +63,8 @@ This project is a tutorial on plain C programming. It gives an example and basic
 
 ### Prerequisites
 To be able to use this tutorial you'll need gcc intalled
-* MSYS2
-* GCC compiler
+- **MSYS2** or any environment providing GCC  
+- **GCC compiler** (Windows, Linux, or macOS)
 
 
 ### Setup
@@ -72,19 +72,19 @@ To be able to use this tutorial you'll need gcc intalled
    ```sh
    git clone https://github.com/github_username/repo_name.git
    ```
-2. Compile the main code welcomehome.c
+2. Compile the emulator code welcomehome.c
    ```sh
    gcc welcomehome.c eeprom.c rtc.c serial.c -o welcomehome.exe -lws2_32
    ```
-3. Compile the command code commande.c
+3. Compile the command sender code commande.c
    ```sh
    gcc commande.c -o commande.exe -lws2_32
    ```
-4. run main code first
+4. run main emulator code first
    ```sh
    ./welcomehome.exe
    ```
-4. run commande code second
+4. run commande code in another terminal
    ```sh
    ./welcomehome.exe
    ```
@@ -94,8 +94,8 @@ You can send commands via the serial interface:
 
 | Command              | Description |
 |----------------------|-------------|
-| `btn in`             | Emulate button pressed |
-| `btn out`            | Emulate button released |
+| `btn in`             | Simulate button pressed |
+| `btn out`            | Simulate button released |
 | `cmd on`             | Activate device (if safety conditions met) |
 | `cmd off`            | Deactivate device |
 | `set_delay <int>`    | Set safety delay (ms), saved to EEPROM |
@@ -107,12 +107,12 @@ You can send commands via the serial interface:
 ## Roadmap
 1. [ ] Implement RTC alarms and slot management
 2. [ ] Enhance eeprom usage
-3. [ ] Enhance battery/charge monitoring
 4. [ ] Improve error handling
-5. [ ] ~Add BLE communication~
 ---
 
 <!-- LICENSE -->
 ## License
+
+ This software is published under the terms of the [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

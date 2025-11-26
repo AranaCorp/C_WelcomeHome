@@ -39,7 +39,7 @@ int main() {
 
     char cmd[128], buf[256];
     while(1) {
-        printf("Commande (btn in/out, set_delay x, set_analog x, led on/off, status, date, sync, quit : \n");
+        printf("Commande (btn in/out, set_delay x, set_analog x, cmd on/off, status, date, sync, quit : \n");
         if(!fgets(cmd,sizeof(cmd),stdin)) break;
         if(strncmp(cmd,"quit",4)==0) {
             send(sockfd,cmd,strlen(cmd),0);
