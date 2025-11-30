@@ -17,7 +17,7 @@ void rtc_init(RTC *rtc) {
 	time_t now = time(NULL);
     rtc->delta = now - rtc->timestamp;
 	
-	printf("[RTC] delta with current time : %ld\n",rtc->delta);
+	printf("[RTC] delta with current time : %lld\n",rtc->delta);
 }
 
 // Compute time data from timestamp

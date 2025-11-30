@@ -6,15 +6,18 @@
 <!-- OVERVIEW -->
 ## Overview
 ### Descritpion
-This project is a tutorial on plain C programming. It gives an example and basic knowledge on key features of the language, interfaces and common librairies. It is the next step following the helloworld tutorial to grasp the essentials of C programming.
+C WelcomeHome is a pedagogical project that demonstrates how to build a small microcontroller emulator using plain C.
+It follows the traditional “Hello World” tutorial and introduces essential topics such as modular project structure, hardware interface emulation, memory persistence, time management, and serial communication.
+
+This project is suitable for beginners who want to understand embedded-style programming in a desktop environment without requiring physical hardware.
 
 ### Main features:
 - **Discrete State/Output** Emulate a simple state or output (On/Off)
-- **Discrete Input** Emulate discrete input such as a button (integer)
-- **Analog Input** Emulate analog input such as a sensor (float)
-- **EEPROM interface** Emulated data storage (file,bdd,ROM,etc.)
-- **Serial communication** Emulate serial communication (USB, UDP, BLE.)
-- **RTC management** Emulated real time (timestamp, alarms)
+- **Discrete Input** Emulates a button or binary sensor (boolean)
+- **Analog Input** Emulates a voltage-based analog sensor (float)
+- **EEPROM interface** Provides persistent data storage using a file (file,bdd,ROM,etc.)
+- **Serial communication** Emulates UART communication using a TCP socket (USB, UDP, BLE.)
+- **RTC management** Provides timestamp, date string, and synchronization logic (timestamp, alarms)
 
 ### System Architecture:
 <table>
@@ -74,11 +77,11 @@ To be able to use this tutorial you'll need gcc intalled
    ```
 2. Compile the emulator code welcomehome.c
    ```sh
-   gcc welcomehome.c eeprom.c rtc.c serial.c -o welcomehome.exe -lws2_32
+   gcc welcomehome.c ./src/eeprom.c ./src/rtc.c ./src/serial.c -Iinclude -o welcomehome.exe -lws2_32
    ```
 3. Compile the command sender code commande.c
    ```sh
-   gcc commande.c -o commande.exe -lws2_32
+   gcc ./tests/commande.c -o commande.exe -lws2_32
    ```
 4. run main emulator code first
    ```sh
@@ -86,7 +89,7 @@ To be able to use this tutorial you'll need gcc intalled
    ```
 4. run commande code in another terminal
    ```sh
-   ./welcomehome.exe
+   ./commande.exe
    ```
 
 ### Usage

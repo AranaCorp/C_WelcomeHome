@@ -47,9 +47,12 @@ int main() {
             printf("[CMD] Recv: %s",buf);
             break;
         }
-        send(sockfd,cmd,strlen(cmd),0);
-        int n=recv_line(sockfd,buf,sizeof(buf));
-        if(n>0) printf("[CMD] Recv: %s\n",buf);
+        if(strlen(cmd) > 1 && cmd[strlen(cmd)-1]=='\n'){
+            printf("[CMD] Send: %s",cmd);
+            send(sockfd,cmd,strlen(cmd),0);
+            int n=recv_line(sockfd,buf,sizeof(buf));
+            if(n>0) printf("[CMD] Recv: %s\n",buf);
+        }
     }
 
 #ifdef _WIN32
