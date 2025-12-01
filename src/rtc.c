@@ -31,8 +31,9 @@ void rtc_get_timestring(RTC *rtc) {
 }
 
 // Synchroniser avec l'heure système
-void rtc_sync_time(RTC *rtc) {
-    rtc->timestamp = time(NULL);
+void rtc_sync_time(RTC *rtc, time_t ts) {
+    if(ts <= 0) ts = time(NULL);
+    rtc->timestamp = ts;
     rtc->delta = 0;
     //send_response("ACK SYNC\n");
 }

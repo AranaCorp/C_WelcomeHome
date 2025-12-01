@@ -1,12 +1,12 @@
-/** 
+/**
  * @file    welcomehome.c
  * @brief   Simule le comportement d’un microcontrôleur
  *           - Serial : Communique via USB (USART)
  *           - Acq : Gère l'acquisition d'un signal discret et analogique
  *           - LED : Génère une commande PWM
  *           - RTC : Gère le temps réel (RTC)
- *           - EEPROM : Gère l'EEPROM 
- * 
+ *           - EEPROM : Gère l'EEPROM
+ *
  * @compilation:
  *          Linux/Mac : gcc  src\*.c -Iinclude welcomehome.c -o welcomehome.exe ; gcc ./tests/commande.c -o commande.exe
  *          Windows   : gcc  src\*.c -Iinclude welcomehome.c -o welcomehome.exe -lws2_32 ; gcc ./tests/commande.c -o commande.exe -lws2_32
@@ -37,15 +37,43 @@ typedef struct
     float sensor_value;    // valeur analogique
     uint16_t analog_value; // 0..1023
     uint16_t safety_delay; // ms
+    uint8_t dev_state;
     bool btn_status;       // 0=released, 1=pressed
     bool cmd_status;       // 0=off, 1=on
     bool led_on;           // 0=off, 1=on
     bool armed;            // safety delay passed
 } DeviceState_t;
-DeviceState_t state = {0.0f, 0, DEFAULT_SAFETY_DELAY, false, false, false,false};
-static time_t delay_start_time = 0;   // 
+DeviceState_t state = {0.0f, 0, DEFAULT_SAFETY_DELAY, 0, false, false, false,false};
+static time_t delay_start_time = 0;   //
 
+enum DEVICE_STATE {
+    DEVICE_CLOSED = 0, //closed , btn released
+    DEVICE_WAIT = 1,   //closed , btn pressed, safety delay not passed
+    DEVICE_ARMED = 2, //closed , btn pressed, safety delay passed
+    DEVICE_OPENED = 3  //opened
+};
 // ==================== OUTPUT ====================
+char dev_state_str[16] = "CLOSED";
+void get_device_state_str(uint8_t state, char *buf, size_t bufsize){
+    switch(state){
+        case DEVICE_CLOSED:
+            snprintf(buf,bufsize,"CLOSED");
+            break;
+        case DEVICE_WAIT:
+            snprintf(buf,bufsize,"WAIT");
+            break;
+        case DEVICE_ARMED:
+            snprintf(buf,bufsize,"ARMED");
+            break;
+        case DEVICE_OPENED:
+            snprintf(buf,bufsize,"OPENED");
+            break;
+        default:
+            snprintf(buf,bufsize,"UNKNOWN");
+            break;
+    }
+}   
+
 bool safe_delay_ok(void) {
     if (!state.btn_status){
         send_response("ERR DIS_STATE\n");
@@ -55,9 +83,11 @@ bool safe_delay_ok(void) {
     time_t now = rtc.timestamp;
     state.armed = (now - delay_start_time) >= state.safety_delay;
     if (state.armed == true){
+        state.dev_state = DEVICE_ARMED;
         printf("[MCU] Safe delay terminated\n");
         return true;
     }else{
+        state.dev_state = DEVICE_WAIT;
         printf("[MCU] Safe delay not terminated : %lld >= %d \n",(now - delay_start_time),state.safety_delay);
         send_response("ERR SAFETY_DELAY\n");
     }
@@ -66,11 +96,13 @@ bool safe_delay_ok(void) {
 
 void stop_device() {
 	state.cmd_status = 0;
+    state.dev_state = DEVICE_CLOSED;
 	send_response("ACK CLOSED\n");
 }
 void start_device() {
     if (!safe_delay_ok()) return;
     state.cmd_status = 1;
+    state.dev_state = DEVICE_OPENED;
 	send_response("ACK OPENED\n");
 }
 
@@ -116,12 +148,14 @@ int manage_request(const char *cmd) {
         } else {
             send_response("ERR Bad SET_DELAY\n");
         }
-    // --- Sync time --- 
+    // --- Sync time ---
     } else if (strncmp(cmd,"status",6)==0) {
         char resp[256];
+        get_device_state_str(state.dev_state,dev_state_str,sizeof(dev_state_str));
         snprintf(resp,sizeof(resp),
-                 "TIME=%s BTN=%d ANALOG=%.2f DELAY=%d LED=%d\n",
-                 rtc.timestr, state.btn_status, state.sensor_value, state.safety_delay, state.cmd_status);
+                 "TIME=%s BTN=%d ANALOG=%.2f DELAY=%d LED=%d (%s)\n",
+                 rtc.timestr, state.btn_status, state.sensor_value, state.safety_delay, state.cmd_status,
+                 dev_state_str);
         send_response(resp);
     } else if (strncmp(cmd,"date",4)==0) {
         char resp[128];
@@ -132,7 +166,11 @@ int manage_request(const char *cmd) {
         snprintf(resp,sizeof(resp),"STAMP=%lld\n",rtc.timestamp);
         send_response(resp);
     } else if (strncmp(cmd,"sync",4)==0) {
-        rtc_sync_time(&rtc);
+        time_t ts = 0;
+        if (!sscanf(cmd,"sync %ld",&ts) == 1) {
+            ts = 0;
+        }
+        rtc_sync_time(&rtc,ts);
         send_response("ACK SYNC\n");
     } else if (strncmp(cmd,"quit",4)==0) {
         send_response("BYE\n");
@@ -142,7 +180,7 @@ int manage_request(const char *cmd) {
     }
 
     return 0;
-}   
+}
 
 // ==================== MAIN ====================
 int main(void)
@@ -153,27 +191,28 @@ int main(void)
 
     serial_init();
     int client = -1;//serial_accept();
-    
+
     state.analog_value = eeprom_read_int16(0x10); //restauration de la valeur analogique
     state.safety_delay = eeprom_read_int16(0x20); //restauration du delai de securite
     state.sensor_value = (float)(state.analog_value * 12.0 / 1023.0);
     previous_time = clock() + period_ticks;
+    state.dev_state = DEVICE_CLOSED;
     // ---------------- Boucle principale ----------------
     char buf[256];
     uint16_t counter = 0;
     while(1) {
         while (client<0) client = serial_accept();
-        
+
         // RTC update every second
         if (clock() >= previous_time) {
-            
+
             previous_time += period_ticks;
             state.led_on = !state.led_on; //toggle led
             if(counter % (int)(1000/TICK_INTERVAL_MS) == 0){
-                rtc_update_time(&rtc); 
+                rtc_update_time(&rtc);
             }
             counter++;
-        }    
+        }
 
         //read from usb/observer
         receive_request(buf,256);

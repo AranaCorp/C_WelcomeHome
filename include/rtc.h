@@ -16,7 +16,7 @@ typedef struct {
 
 void rtc_init(RTC *rtc);
 void rtc_get_timestring(RTC *rtc);
-void rtc_sync_time(RTC *rtc);
+void rtc_sync_time(RTC *rtc, time_t ts);
 void rtc_update_time(RTC *rtc);
 void rtc_save_to_eeprom(RTC *rtc, uint8_t addr);
 void rtc_load_from_eeprom(RTC *rtc, uint8_t addr);
