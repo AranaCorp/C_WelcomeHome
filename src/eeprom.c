@@ -28,6 +28,21 @@ void eeprom_save() {
     fclose(f);
 }
 
+void eeprom_clear() {
+    memset(eeprom, 0, EEPROM_SIZE);
+    eeprom_save();
+}
+
+void eeprom_show() {
+    printf("EEPROM CONTENT:\n");
+    for (size_t i = 0; i < EEPROM_SIZE; i++) {
+        if (i % 16 == 0) printf("%04X: ", (unsigned int)i);
+        printf("%02X ", eeprom[i]);
+        if (i % 16 == 15) printf("\n");
+    }
+    if (EEPROM_SIZE % 16 != 0) printf("\n");
+}
+
 void eeprom_write(uint8_t addr, uint8_t value) {
     if (addr < EEPROM_SIZE) {
         eeprom[addr] = value;

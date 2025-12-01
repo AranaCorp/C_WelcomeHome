@@ -148,7 +148,6 @@ int manage_request(const char *cmd) {
         } else {
             send_response("ERR Bad SET_DELAY\n");
         }
-    // --- Sync time ---
     } else if (strncmp(cmd,"status",6)==0) {
         char resp[256];
         get_device_state_str(state.dev_state,dev_state_str,sizeof(dev_state_str));
@@ -172,6 +171,12 @@ int manage_request(const char *cmd) {
         }
         rtc_sync_time(&rtc,ts);
         send_response("ACK SYNC\n");
+
+    } else if  (strcmp(cmd,"clear")==0) {
+        rtc = (RTC){0};
+        state = (DeviceState_t){0.0f, 0, 0, 0, false, false, false,false};
+        eeprom_clear();
+        send_response("ACK EEPROM CLEARED\n");
     } else if (strncmp(cmd,"quit",4)==0) {
         send_response("BYE\n");
         return -1; //break;
@@ -187,6 +192,7 @@ int main(void)
 {
     // ---------------- Initialisation -------------------
     eeprom_load(); // Charger EEPROM au démarrage
+    eeprom_show();
 	rtc_init(&rtc);
 
     serial_init();

@@ -48,7 +48,7 @@ return sockfd;
 int serial_accept(){
     client = accept(sockfd,NULL,NULL);
     
-    if (client < 0) { perror("accept"); return -1; }
+    if (client < 0) { /*perror("accept");*/ return -1; }
     printf("[SER] Client connected.\n");
 
     return client;
